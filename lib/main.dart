@@ -20,7 +20,7 @@ class _MyAppState extends State<MyApp> {
         appBar: AppBar(
           title: Text('hey I am here!'),
         ),
-        body: ProductManager()
+        body: ProductManager('First prod')
       )
     );
   }
