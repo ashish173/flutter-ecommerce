@@ -23,9 +23,9 @@ class _ProductManagerState extends State<ProductManager> {
     super.initState();
   }
 
-  void addProduct() {
+  void _addProduct(product) {
     setState(() {
-      _products.add("Advanced food tester");
+      _products.add(product);
     });
   }
 
@@ -33,9 +33,9 @@ class _ProductManagerState extends State<ProductManager> {
     return Column(children: <Widget>[
       Container(
         margin: EdgeInsets.all(10.0),
-        child: ProductControl(addProduct),
+        child: ProductControl(_addProduct),
       ),
-      Products(_products)
+      Expanded(child: Products(_products))
     ]);
   }
 }
