@@ -29,13 +29,19 @@ class _ProductManagerState extends State<ProductManager> {
     });
   }
 
+  void _deleteProduct(index) {
+    setState(() {
+      _products.removeAt(index);
+    });
+  }
+
   Widget build(BuildContext context) {
     return Column(children: <Widget>[
       Container(
         margin: EdgeInsets.all(10.0),
         child: ProductControl(_addProduct),
       ),
-      Expanded(child: Products(_products))
+      Expanded(child: Products(_products, deleteProduct: _deleteProduct))
     ]);
   }
 }
