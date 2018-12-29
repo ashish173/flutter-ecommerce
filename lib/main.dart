@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import './pages/home.dart';
+import './pages/auth.dart';
 
 void main() => runApp(MyApp());
 
@@ -21,7 +21,7 @@ class _MyAppState extends State<MyApp> {
         primarySwatch: Colors.deepOrange,
         accentColor: Colors.deepPurple
       ),
-      home: HomePage()
+      home: AuthPage()
     );
   }
 }
