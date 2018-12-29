@@ -7,7 +7,7 @@ import './pages/product.dart';
 // doesn't modify data just replaces what comes from top
 
 class Products extends StatelessWidget {
-  final List<String> products;
+  final List<Map<String, String>> products;
 
   Products([this.products = const []]);
 
@@ -15,8 +15,8 @@ class Products extends StatelessWidget {
     return Card(
       child: Column(
         children: <Widget>[
-          Image.asset('assets/profile.jpeg'),
-          Text(products[index]),
+          Image.asset(products[index]['image']),
+          Text(products[index]['title']),
           ButtonBar(
             alignment: MainAxisAlignment.center,
             children: <Widget>[
@@ -26,7 +26,7 @@ class Products extends StatelessWidget {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (BuildContext context) => ProductPage(),
+                      builder: (BuildContext context) => ProductPage(products[index]['title'], products[index]['image']),
                     ),
                   );
                 },
