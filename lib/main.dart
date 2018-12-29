@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import './product_manager.dart';
+import './pages/home.dart';
 
 void main() => runApp(MyApp());
 
@@ -21,12 +21,7 @@ class _MyAppState extends State<MyApp> {
         primarySwatch: Colors.deepOrange,
         accentColor: Colors.deepPurple
       ),
-      home: Scaffold(
-        appBar: AppBar(
-          title: Text('hey I am here!'),
-        ),
-        body: ProductManager(),
-      )
+      home: HomePage()
     );
   }
 }

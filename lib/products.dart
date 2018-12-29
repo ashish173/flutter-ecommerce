@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import './pages/product.dart';
+
 // renders the products list which is recieves as arguments
 // Stateless widget as it only takes in values in renders them
 // doesn't modify data just replaces what comes from top
@@ -14,7 +16,23 @@ class Products extends StatelessWidget {
       child: Column(
         children: <Widget>[
           Image.asset('assets/profile.jpeg'),
-          Text(products[index])
+          Text(products[index]),
+          ButtonBar(
+            alignment: MainAxisAlignment.center,
+            children: <Widget>[
+              FlatButton(
+                child: Text('Details'),
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (BuildContext context) => ProductPage(),
+                    ),
+                  );
+                },
+              )
+            ],
+          )
         ],
       ),
     );
