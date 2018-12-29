@@ -4,7 +4,7 @@ import './products.dart';
 import './product_list.dart';
 import './product_create.dart';
 
-class ProductsAdmin extends StatelessWidget {
+class ProductsAdminPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return DefaultTabController(
       length: 2,
