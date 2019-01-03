@@ -52,18 +52,13 @@ class ProductCard extends StatelessWidget {
                 color: Theme.of(context).accentColor,
                 onPressed: () {
                   Navigator.pushNamed<bool>(
-                          context, '/product/' + productIndex.toString())
-                      .then((bool delete) {
-                    if (delete) {
-                      // deleteProduct(index);
-                    }
-                  });
+                      context, '/product/' + productIndex.toString());
                 },
               ),
               IconButton(
                 icon: Icon(Icons.favorite_border),
                 color: Theme.of(context).primaryColor,
-                onPressed: () { },
+                onPressed: () {},
               )
             ],
           )
