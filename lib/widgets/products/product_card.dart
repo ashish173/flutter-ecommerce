@@ -1,27 +1,24 @@
 import 'package:flutter/material.dart';
 
-// renders the products list which is recieves as arguments
-// Stateless widget as it only takes in values in renders them
-// doesn't modify data just replaces what comes from top
+class ProductCard extends StatelessWidget {
+  final Map<String, dynamic> product;
+  final int productIndex;
 
-class Products extends StatelessWidget {
-  final List<Map<String, dynamic>> products;
-  final Function deleteProduct;
+  ProductCard(this.product, this.productIndex);
 
-  Products(this.products, {this.deleteProduct});
-
-  Widget _productItemBuilder(BuildContext context, int index) {
+  @override
+  Widget build(BuildContext context) {
     return Card(
       child: Column(
         children: <Widget>[
-          Image.asset(products[index]['image']),
+          Image.asset(product['image']),
           Container(
             padding: EdgeInsets.only(top: 10.0),
             child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
                   Text(
-                    products[index]['title'],
+                    product['title'],
                     style: TextStyle(fontFamily: 'Oswald', fontSize: 26.0),
                   ),
                   SizedBox(
@@ -34,7 +31,7 @@ class Products extends StatelessWidget {
                         color: Theme.of(context).accentColor,
                         borderRadius: BorderRadius.circular(5.0)),
                     child: Text(
-                      '\$${products[index]['price'].toString()}',
+                      '\$${product['price'].toString()}',
                       style: TextStyle(color: Colors.white),
                     ),
                   )
@@ -55,10 +52,10 @@ class Products extends StatelessWidget {
                 color: Theme.of(context).accentColor,
                 onPressed: () {
                   Navigator.pushNamed<bool>(
-                          context, '/product/' + index.toString())
+                          context, '/product/' + productIndex.toString())
                       .then((bool delete) {
                     if (delete) {
-                      deleteProduct(index);
+                      // deleteProduct(index);
                     }
                   });
                 },
@@ -73,28 +70,5 @@ class Products extends StatelessWidget {
         ],
       ),
     );
-  }
-
-  Widget _buildProductList() {
-    Widget productCard;
-
-    if (products.length > 0) {
-      productCard = ListView.builder(
-        itemBuilder: _productItemBuilder,
-        itemCount: products.length,
-      );
-    } else {
-      productCard = Center(
-        child: Text("No products found"),
-      );
-    }
-
-    return productCard;
-  }
-
-  @override
-  Widget build(BuildContext content) {
-    print('Products build()');
-    return _buildProductList();
   }
 }
