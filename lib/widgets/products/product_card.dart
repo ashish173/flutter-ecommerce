@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../ui_elements/title_default.dart';
-import '../ui_elements/address.dart';
+import '../ui_elements/address_tag.dart';
 
 class ProductCard extends StatelessWidget {
   final Map<String, dynamic> product;
@@ -9,13 +9,8 @@ class ProductCard extends StatelessWidget {
 
   ProductCard(this.product, this.productIndex);
 
-  @override
-  Widget build(BuildContext context) {
-    return Card(
-      child: Column(
-        children: <Widget>[
-          Image.asset(product['image']),
-          Container(
+  Widget _buildTitlePriceRow(BuildContext context) {
+    return Container(
             padding: EdgeInsets.only(top: 10.0),
             child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -36,26 +31,39 @@ class ProductCard extends StatelessWidget {
                     ),
                   )
                 ]),
-          ),
-          Address('Pune, India'),
-          ButtonBar(
-            alignment: MainAxisAlignment.center,
-            children: <Widget>[
-              IconButton(
-                icon: Icon(Icons.info),
-                color: Theme.of(context).accentColor,
-                onPressed: () {
-                  Navigator.pushNamed<bool>(
-                      context, '/product/' + productIndex.toString());
-                },
-              ),
-              IconButton(
-                icon: Icon(Icons.favorite_border),
-                color: Theme.of(context).primaryColor,
-                onPressed: () {},
-              )
-            ],
-          )
+          );
+  }
+
+  Widget _buildButtonBar(BuildContext context) {
+    return ButtonBar(
+      alignment: MainAxisAlignment.center,
+      children: <Widget>[
+        IconButton(
+          icon: Icon(Icons.info),
+          color: Theme.of(context).accentColor,
+          onPressed: () {
+            Navigator.pushNamed<bool>(
+                context, '/product/' + productIndex.toString());
+          },
+        ),
+        IconButton(
+          icon: Icon(Icons.favorite_border),
+          color: Theme.of(context).primaryColor,
+          onPressed: () {},
+        )
+      ],
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Card(
+      child: Column(
+        children: <Widget>[
+          Image.asset(product['image']),
+          _buildTitlePriceRow(context),
+          AddressTag('Pune, India'),
+          _buildButtonBar(context),
         ],
       ),
     );

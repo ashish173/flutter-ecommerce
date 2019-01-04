@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 
-class Address extends StatelessWidget {
+class AddressTag extends StatelessWidget {
   final String address;
 
-  Address(this.address);
+  AddressTag(this.address);
 
   @override
   Widget build(BuildContext context) {

@@ -9,31 +9,34 @@ class ProductsAdminPage extends StatelessWidget {
 
   ProductsAdminPage(this.addProduct, this.deleteProduct);
 
+  Widget _buildDrawer(BuildContext context) {
+    return Drawer(
+      child: ListView(
+        padding: EdgeInsets.zero,
+        children: <Widget>[
+          DrawerHeader(
+            child: Text('Choose'),
+            decoration: BoxDecoration(
+              color: Theme.of(context).primaryColor,
+            ),
+          ),
+          ListTile(
+            leading: Icon(Icons.shop),
+            title: Text('All Products'),
+            onTap: () {
+              Navigator.pushReplacementNamed(context, '/home');
+            },
+          ),
+        ],
+      ),
+    );
+  }
+
   Widget build(BuildContext context) {
     return DefaultTabController(
       length: 2,
       child: Scaffold(
-        drawer: Drawer(
-          child: ListView(
-            // Important: Remove any padding from the ListView.
-            padding: EdgeInsets.zero,
-            children: <Widget>[
-              DrawerHeader(
-                child: Text('Choose'),
-                decoration: BoxDecoration(
-                  color: Theme.of(context).primaryColor,
-                ),
-              ),
-              ListTile(
-                leading: Icon(Icons.shop),
-                title: Text('All Products'),
-                onTap: () {
-                  Navigator.pushReplacementNamed(context, '/home');
-                },
-              ),
-            ],
-          ),
-        ),
+        drawer: _buildDrawer(context),
         appBar: AppBar(
           title: Text("Manage Products"),
           bottom: TabBar(
