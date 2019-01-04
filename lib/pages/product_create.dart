@@ -18,21 +18,20 @@ class _ProductCreatePage extends State<ProductCreatePage> {
   int price;
   String image;
 
-  Widget build(BuildContext context) {
-    return Container(
-        padding: EdgeInsets.all(10.0),
-        child: ListView(
-          children: <Widget>[
-            TextField(
-              autofocus: true,
-              decoration: InputDecoration(labelText: 'Title'),
-              onChanged: (String value) {
-                setState(() {
-                  title = value;
-                });
-              },
-            ),
-            TextField(
+  Widget _buildTitleTextField() {
+    return TextField(
+      autofocus: true,
+      decoration: InputDecoration(labelText: 'Title'),
+      onChanged: (String value) {
+        setState(() {
+          title = value;
+        });
+      },
+    );
+  }
+
+  Widget _buildDescriptionTextField() {
+    return TextField(
               decoration: InputDecoration(labelText: 'Description'),
               onChanged: (String value) {
                 setState(() {
@@ -40,8 +39,11 @@ class _ProductCreatePage extends State<ProductCreatePage> {
                 });
               },
               maxLines: 5,
-            ),
-            TextField(
+            );
+  }
+
+  Widget _buildPriceIntField() {
+    return TextField(
               decoration: InputDecoration(labelText: 'Price'),
               keyboardType: TextInputType.number,
               onChanged: (String value) {
@@ -49,24 +51,36 @@ class _ProductCreatePage extends State<ProductCreatePage> {
                   price = int.parse(value);
                 });
               },
-            ),
+            );
+  }
+
+  void _submitForm() {
+    final Map<String, dynamic> product = {
+      'title': title,
+      'description': description,
+      'price': price,
+      'image': 'assets/profile.jpeg'
+    };
+    widget.addProduct(product);
+    Navigator.pushReplacementNamed(context, '/home');
+  }
+
+  Widget build(BuildContext context) {
+    return Container(
+        padding: EdgeInsets.all(10.0),
+        child: ListView(
+          children: <Widget>[
+            _buildTitleTextField(),
+            _buildDescriptionTextField(),
+            _buildPriceIntField(),
             SizedBox(
               height: 10.0,
             ),
             RaisedButton(
-              child: Text('Save'),
-              color: Theme.of(context).accentColor,
-              textColor: Colors.white,
-              onPressed: () {
-                final Map<String, dynamic> product = {
-                  'title': title,
-                  'description': description,
-                  'price': price,
-                  'image': 'assets/profile.jpeg'
-                };
-                widget.addProduct(product);
-                Navigator.pushReplacementNamed(context, '/home');
-              }
+                child: Text('Save'),
+                color: Theme.of(context).accentColor,
+                textColor: Colors.white,
+                onPressed: _submitForm
             )
           ],
         ));
