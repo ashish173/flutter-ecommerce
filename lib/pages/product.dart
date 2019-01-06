@@ -5,7 +5,7 @@ import '../widgets/ui_elements/title_default.dart';
 class ProductPage extends StatelessWidget {
   final String title;
   final String imageUrl;
-  final int price;
+  final double price;
 
   ProductPage(this.title, this.imageUrl, this.price);
 
