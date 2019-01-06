@@ -21,26 +21,25 @@ class _ProductCreatePage extends State<ProductCreatePage> {
 
   Widget _buildTitleTextField() {
     return TextFormField(
-      autofocus: true,
-      decoration: InputDecoration(labelText: 'Title'),
-      validator: (String value) {
-        if(value.isEmpty || value.length < 5) {
-          return 'Title is required and should be more than 5 characters';
-        }
-      },
-      onSaved: (String value) {
-        setState(() {
-          title = value;
+        autofocus: true,
+        decoration: InputDecoration(labelText: 'Title'),
+        validator: (String value) {
+          if (value.isEmpty || value.length < 5) {
+            return 'Title is required and should be more than 5 characters';
+          }
+        },
+        onSaved: (String value) {
+          setState(() {
+            title = value;
+          });
         });
-      }
-    );
   }
 
   Widget _buildDescriptionTextField() {
     return TextFormField(
       decoration: InputDecoration(labelText: 'Description'),
       validator: (String value) {
-        if(value.isEmpty || value.length < 10) {
+        if (value.isEmpty || value.length < 10) {
           return 'Description is required and should be more than 10 characters';
         }
       },
@@ -58,7 +57,8 @@ class _ProductCreatePage extends State<ProductCreatePage> {
       decoration: InputDecoration(labelText: 'Price'),
       keyboardType: TextInputType.number,
       validator: (String value) {
-        if(value.isEmpty || !RegExp(r'^(?:[1-9]\d*|0)?(?:\.\d+)?$').hasMatch(value)) {
+        if (value.isEmpty ||
+            !RegExp(r'^(?:[1-9]\d*|0)?(?:\.\d+)?$').hasMatch(value)) {
           return 'Price is require and should be number';
         }
       },
@@ -67,7 +67,6 @@ class _ProductCreatePage extends State<ProductCreatePage> {
           price = double.parse(value);
         });
       },
-      
     );
   }
 
@@ -90,25 +89,32 @@ class _ProductCreatePage extends State<ProductCreatePage> {
     final double targetWidth = deviceWidth > 500.0 ? 500.0 : deviceWidth * 0.95;
     final double targetPadding = deviceWidth - targetWidth;
 
-    return Container(
-      padding: EdgeInsets.all(10.0),
-      child: Form(
-        key: _formKey,
-        onChanged: () { print('form changed'); },
-        child: ListView(
-          padding: EdgeInsets.symmetric(horizontal: targetPadding / 2),
-          children: <Widget>[
-            _buildTitleTextField(),
-            _buildDescriptionTextField(),
-            _buildPriceIntField(),
-            SizedBox(
-              height: 10.0,
-            ),
-            RaisedButton(
-                child: Text('Save'),
-                textColor: Colors.white,
-                onPressed: _submitForm)
-          ],
+    return GestureDetector(
+      onTap: () {
+        FocusScope.of(context).requestFocus(FocusNode()); // pass empty node focus option
+      },
+      child: Container(
+        padding: EdgeInsets.all(10.0),
+        child: Form(
+          key: _formKey,
+          onChanged: () {
+            print('form changed');
+          },
+          child: ListView(
+            padding: EdgeInsets.symmetric(horizontal: targetPadding / 2),
+            children: <Widget>[
+              _buildTitleTextField(),
+              _buildDescriptionTextField(),
+              _buildPriceIntField(),
+              SizedBox(
+                height: 10.0,
+              ),
+              RaisedButton(
+                  child: Text('Save'),
+                  textColor: Colors.white,
+                  onPressed: _submitForm)
+            ],
+          ),
         ),
       ),
     );
