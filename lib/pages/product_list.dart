@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 
-import './product_create.dart';
+import './product_edit.dart';
 
 class ProductListPage extends StatelessWidget {
   final List<Map<String, dynamic>> products;
+  final Function updateProduct;
 
-  ProductListPage(this.products);
+  ProductListPage(this.products, this.updateProduct);
 
   Widget build(BuildContext context) {
     return ListView.builder(
@@ -19,7 +20,10 @@ class ProductListPage extends StatelessWidget {
               Navigator.push(
                 context,
                 MaterialPageRoute(builder: (BuildContext context) {
-                  return ProductCreatePage(product: products[index]);
+                  return ProductEditPage(
+                      product: products[index],
+                      updateProduct: updateProduct,
+                      productIndex: index);
                 }),
               );
             },

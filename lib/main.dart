@@ -21,6 +21,7 @@ class _MyAppState extends State<MyApp> {
   List<Map<String, dynamic>> _products = [];
 
   void _addProduct(product) {
+    print('add product called');
     setState(() {
       _products.add(product);
     });
@@ -32,20 +33,25 @@ class _MyAppState extends State<MyApp> {
     });
   }
 
+  void _updateProduct(index, product) {
+    setState(() {
+      _products[index] = product;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       theme: ThemeData(
-        brightness: Brightness.light,
-        primarySwatch: Colors.deepOrange,
-        accentColor: Colors.deepPurple,
-        buttonColor: Colors.deepPurple
-      ),
+          brightness: Brightness.light,
+          primarySwatch: Colors.deepOrange,
+          accentColor: Colors.deepPurple,
+          buttonColor: Colors.deepPurple),
       home: AuthPage(),
       routes: {
-        '/home': (BuildContext context) =>
-            ProductsPage(_products),
-        '/admin': (BuildContext context) => ProductsAdminPage(_addProduct, _deleteProduct, _products)
+        '/home': (BuildContext context) => ProductsPage(_products),
+        '/admin': (BuildContext context) =>
+            ProductsAdminPage(_addProduct, _updateProduct, _deleteProduct, _products)
       },
       onGenerateRoute: (RouteSettings settings) {
         final List<String> pathElements = settings.name.split('/');
@@ -57,7 +63,9 @@ class _MyAppState extends State<MyApp> {
 
           return MaterialPageRoute<bool>(
             builder: (BuildContext context) => ProductPage(
-                _products[index]['title'], _products[index]['image'], _products[index]['price']),
+                _products[index]['title'],
+                _products[index]['image'],
+                _products[index]['price']),
           );
         }
 
@@ -65,8 +73,7 @@ class _MyAppState extends State<MyApp> {
       },
       onUnknownRoute: (RouteSettings settings) {
         return MaterialPageRoute(
-          builder: (BuildContext context) =>
-              ProductsPage(_products),
+          builder: (BuildContext context) => ProductsPage(_products),
         );
       },
     );

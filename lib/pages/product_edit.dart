@@ -1,19 +1,26 @@
 import 'package:flutter/material.dart';
 
-class ProductCreatePage extends StatefulWidget {
+class ProductEditPage extends StatefulWidget {
   final Function addProduct;
   final Function deleteProduct;
+  final Function updateProduct;
+  final int productIndex;
   final Map<String, dynamic> product;
 
-  ProductCreatePage({this.addProduct, this.deleteProduct, this.product});
+  ProductEditPage(
+      {this.productIndex,
+      this.addProduct,
+      this.updateProduct,
+      this.deleteProduct,
+      this.product});
 
   @override
   State<StatefulWidget> createState() {
-    return _ProductCreatePage();
+    return _ProductEditPage();
   }
 }
 
-class _ProductCreatePage extends State<ProductCreatePage> {
+class _ProductEditPage extends State<ProductEditPage> {
   final Map<String, dynamic> _formData = {
     'title': null,
     'description': null,
@@ -56,7 +63,8 @@ class _ProductCreatePage extends State<ProductCreatePage> {
   Widget _buildPriceIntField() {
     return TextFormField(
       decoration: InputDecoration(labelText: 'Price'),
-      initialValue: widget.product == null ? '' : widget.product['price'].toString(),
+      initialValue:
+          widget.product == null ? '' : widget.product['price'].toString(),
       keyboardType: TextInputType.number,
       validator: (String value) {
         if (value.isEmpty ||
@@ -74,7 +82,11 @@ class _ProductCreatePage extends State<ProductCreatePage> {
     _formKey.currentState.validate();
     _formKey.currentState.save();
 
-    widget.addProduct(_formData);
+    if (widget.product == null) {
+      widget.addProduct(_formData);
+    } else {
+      widget.updateProduct(widget.productIndex, _formData);
+    }
     Navigator.pushReplacementNamed(context, '/home');
   }
 
