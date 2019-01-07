@@ -53,6 +53,9 @@ class ProductPage extends StatelessWidget {
                 child: RaisedButton(
                   color: Theme.of(context).accentColor,
                   child: Text('Delete'),
+                  onPressed: () {
+                    print('delete button is pressed');
+                  },
                 ),
               ),
             ],
