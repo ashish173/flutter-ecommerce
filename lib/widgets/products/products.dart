@@ -5,9 +5,10 @@ import 'package:flutter/material.dart';
 // doesn't modify data just replaces what comes from top
 
 import './product_card.dart';
+import './../../models/product.dart';
 
 class Products extends StatelessWidget {
-  final List<Map<String, dynamic>> products;
+  final List<Product> products;
   final Function deleteProduct;
 
   Products(this.products, {this.deleteProduct});
