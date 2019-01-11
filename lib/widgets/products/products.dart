@@ -1,20 +1,20 @@
 import 'package:flutter/material.dart';
 
+import 'package:scoped_model/scoped_model.dart';
+
 // renders the products list which is recieves as arguments
 // Stateless widget as it only takes in values in renders them
 // doesn't modify data just replaces what comes from top
 
 import './product_card.dart';
-import './../../models/product.dart';
+import '../../models/product.dart';
+import '../../scoped-models/products.dart';
 
 class Products extends StatelessWidget {
-  final List<Product> products;
-  final Function deleteProduct;
-
-  Products(this.products, {this.deleteProduct});
-
   @override
-  Widget _buildProductList() {
+  Widget _buildProductList(List<Product> products) {
+    print('prduct length');
+    print(products.length);
     Widget productCard;
 
     if (products.length > 0) {
@@ -32,8 +32,15 @@ class Products extends StatelessWidget {
   }
 
   @override
-  Widget build(BuildContext content) {
-    print('Products build()');
-    return _buildProductList();
+  Widget build(BuildContext context) {
+    return ScopedModelDescendant<ProductsModel>(
+      rebuildOnChange: true,
+      builder: (BuildContext context, Widget child, ProductsModel model) {
+        print('In build method of products widget');
+        print(model.products.length);
+
+        return _buildProductList(model.products);
+      },
+    );
   }
 }

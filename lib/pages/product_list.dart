@@ -1,37 +1,40 @@
 import 'package:flutter/material.dart';
 
+import 'package:scoped_model/scoped_model.dart';
+
 import './product_edit.dart';
-import '../models/product.dart';
+import '../scoped-models/products.dart';
 
 class ProductListPage extends StatelessWidget {
-  final List<Product> products;
-  final Function updateProduct;
-
-  ProductListPage(this.products, this.updateProduct);
-
-  Widget build(BuildContext context) {
-    return ListView.builder(
-      itemBuilder: (context, index) {
-        return ListTile(
-          leading: Image.asset(products[index].image),
-          title: Text(products[index].title),
-          trailing: IconButton(
-            icon: Icon(Icons.edit),
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (BuildContext context) {
-                  return ProductEditPage(
-                      product: products[index],
-                      updateProduct: updateProduct,
-                      productIndex: index);
-                }),
-              );
-            },
-          ),
+  Widget _buildEditButton(
+      BuildContext context, int index, ProductsModel model) {
+    return IconButton(
+      icon: Icon(Icons.edit),
+      onPressed: () {
+        model.selectProduct(index);
+        Navigator.of(context).push(
+          MaterialPageRoute(builder: (BuildContext context) {
+            return ProductEditPage();
+          }),
         );
       },
-      itemCount: products.length,
+    );
+  }
+
+  Widget build(BuildContext context) {
+    return ScopedModelDescendant<ProductsModel>(
+      builder: (BuildContext context, child, ProductsModel model) {
+        ListView.builder(
+          itemBuilder: (context, index) {
+            return ListTile(
+              leading: Image.asset(model.products[index].image),
+              title: Text(model.products[index].title),
+              trailing: _buildEditButton(context, index, model),
+            );
+          },
+          itemCount: model.products.length,
+        );
+      },
     );
   }
 }

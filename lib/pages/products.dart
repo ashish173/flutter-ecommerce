@@ -4,9 +4,6 @@ import '../widgets/products/products.dart';
 import '../models/product.dart';
 
 class ProductsPage extends StatelessWidget {
-  final List<Product> products;
-
-  ProductsPage(this.products);
 
   @override
   Widget build(BuildContext context) {
@@ -46,7 +43,7 @@ class ProductsPage extends StatelessWidget {
       ),
       body: Column(children: <Widget>[
         Expanded(
-          child: Products(products),
+          child: Products(),
         ),
       ]),
     );
