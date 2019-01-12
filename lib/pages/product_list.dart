@@ -24,7 +24,7 @@ class ProductListPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return ScopedModelDescendant<ProductsModel>(
       builder: (BuildContext context, child, ProductsModel model) {
-        ListView.builder(
+        return ListView.builder(
           itemBuilder: (context, index) {
             return ListTile(
               leading: Image.asset(model.products[index].image),

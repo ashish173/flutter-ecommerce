@@ -15,16 +15,19 @@ class ProductsModel extends Model {
     print(product);
     _products.add(product);
     print(_products.length);
+    notifyListeners();
   }
 
-  void deleteProduct(index) {
-    _products.removeAt(index);
+  void deleteProduct() {
+    _products.removeAt(selectedProductIndex);
     _selectedProductIndex = null;
+    notifyListeners();
   }
 
   void updateProduct(index, product) {
     _products[index] = product;
     _selectedProductIndex = null;
+    notifyListeners();
   }
 
   int get selectedProductIndex {
@@ -37,6 +40,22 @@ class ProductsModel extends Model {
     } else {
       return _products[_selectedProductIndex];
     }
+  }
+
+  void toggleIsFavoriteProduct() {
+    final bool isCurrentlyFavorite = _products[selectedProductIndex].isFavorite;
+    final bool newFavoriteStatus = !isCurrentlyFavorite;
+
+    Product updatedProduct = Product(
+        title: selectedProduct.title,
+        description: selectedProduct.description,
+        price: selectedProduct.price,
+        image: selectedProduct.image,
+        isFavorite: newFavoriteStatus);
+
+    _products[selectedProductIndex] = updatedProduct;
+    _selectedProductIndex = null;
+    notifyListeners();
   }
 
   void selectProduct(int productIndex) {
