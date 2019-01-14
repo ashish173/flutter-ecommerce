@@ -76,20 +76,17 @@ class _ProductEditPage extends State<ProductEditPage> {
 
     if (selectedProductIndex == null) {
       addProduct(
-        Product(
-            title: _formData['title'],
-            description: _formData['description'],
-            price: _formData['price'],
-            image: _formData['image']),
+        _formData['title'],
+        _formData['description'],
+        _formData['image'],
+        _formData['price'],
       );
     } else {
       updateProduct(
-        selectedProductIndex,
-        Product(
-            title: _formData['title'],
-            description: _formData['description'],
-            price: _formData['price'],
-            image: _formData['image']),
+        _formData['title'],
+        _formData['description'],
+        _formData['image'],
+        _formData['price'],
       );
     }
     Navigator.pushReplacementNamed(context, '/home');
@@ -97,14 +94,14 @@ class _ProductEditPage extends State<ProductEditPage> {
 
   Widget _buildSubmitButton() {
     return ScopedModelDescendant(
-        builder: (BuildContext context, Widget child, MainModel model) {
-          return RaisedButton(
-            child: Text('Save'),
-            textColor: Colors.white,
-            onPressed: () => _submitForm(model.addProduct, model.updateProduct,
-                model.selectedProductIndex),
-          );
-        },
+      builder: (BuildContext context, Widget child, MainModel model) {
+        return RaisedButton(
+          child: Text('Save'),
+          textColor: Colors.white,
+          onPressed: () => _submitForm(model.addProduct, model.updateProduct,
+              model.selectedProductIndex),
+        );
+      },
     );
   }
 

@@ -38,7 +38,7 @@ class ProductPage extends StatelessWidget {
       },
       child: ScopedModelDescendant<MainModel>(
           builder: (BuildContext context, Widget child, MainModel model) {
-        final List<Product> products = model.products;
+        final List<Product> products = model.allProducts;
         final Product selectedProduct = products[index];
 
         return Scaffold(
@@ -55,6 +55,7 @@ class ProductPage extends StatelessWidget {
                   child: TitleDefault(selectedProduct.title),
                 ),
                 _buildAddressRow(selectedProduct.price),
+                Text(selectedProduct.userEmail),
                 Container(
                   padding: EdgeInsets.all(10.0),
                   child: RaisedButton(

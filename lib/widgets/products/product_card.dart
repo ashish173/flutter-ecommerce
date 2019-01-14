@@ -51,7 +51,7 @@ class ProductCard extends StatelessWidget {
         ScopedModelDescendant<MainModel>(
           builder: (BuildContext context, Widget child, MainModel model) {
             return IconButton(
-              icon: Icon(model.products[productIndex].isFavorite
+              icon: Icon(model.allProducts[productIndex].isFavorite
                   ? Icons.favorite
                   : Icons.favorite_border),
               color: Theme.of(context).primaryColor,

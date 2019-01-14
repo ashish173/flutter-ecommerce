@@ -2,18 +2,16 @@ import '../models/product.dart';
 import './connected_products.dart';
 
 mixin ProductsModel on ConnectedProductsModel {
-  final List<Product> _products = [];
-  int _selectedProductIndex;
   bool _showFavorites = false;
 
-  List<Product> get products {
-    return List.from(_products);
+  List<Product> get allProducts {
+    return List.from(products);
   }
 
   List<Product> get displayProducts {
     return _showFavorites
-        ? _products.where((Product product) => product.isFavorite).toList()
-        : _products;
+        ? products.where((Product product) => product.isFavorite).toList()
+        : products;
   }
 
   bool get showFavorite {
@@ -23,40 +21,41 @@ mixin ProductsModel on ConnectedProductsModel {
     return _showFavorites;
   }
 
-  void addProduct(Product product) {
-    print('in addProduct method');
-    print(product);
-    _products.add(product);
-    print(_products.length);
-    notifyListeners();
-  }
-
   void deleteProduct() {
-    _products.removeAt(selectedProductIndex);
-    _selectedProductIndex = null;
+    products.removeAt(selectedProductIndex);
+    selectedProductIndex = null;
     notifyListeners();
   }
 
-  void updateProduct(index, product) {
-    _products[index] = product;
-    _selectedProductIndex = null;
+  void updateProduct(
+      String title, String description, String image, double price) {
+    Product updatedProduct = Product(
+        title: title,
+        description: description,
+        image: image,
+        price: price,
+        userEmail: authenticatedUser.email,
+        userId: authenticatedUser.id);
+        
+    products[selectedProductIndex] = updatedProduct;
+    selectedProductIndex = null;
     notifyListeners();
   }
 
-  int get selectedProductIndex {
-    return _selectedProductIndex;
-  }
+  // int get selectedProductIndex {
+  //   return ;
+  // }
 
   Product get selectedProduct {
-    if (_selectedProductIndex == null) {
+    if (selectedProductIndex == null) {
       return null;
     } else {
-      return _products[_selectedProductIndex];
+      return products[selectedProductIndex];
     }
   }
 
   void toggleIsFavoriteProduct() {
-    final bool isCurrentlyFavorite = _products[selectedProductIndex].isFavorite;
+    final bool isCurrentlyFavorite = products[selectedProductIndex].isFavorite;
     final bool newFavoriteStatus = !isCurrentlyFavorite;
 
     Product updatedProduct = Product(
@@ -64,15 +63,17 @@ mixin ProductsModel on ConnectedProductsModel {
         description: selectedProduct.description,
         price: selectedProduct.price,
         image: selectedProduct.image,
+        userEmail: selectedProduct.userEmail,
+        userId: selectedProduct.userId,
         isFavorite: newFavoriteStatus);
 
-    _products[selectedProductIndex] = updatedProduct;
-    _selectedProductIndex = null;
+    products[selectedProductIndex] = updatedProduct;
+    selectedProductIndex = null;
     notifyListeners();
   }
 
   void selectProduct(int productIndex) {
-    _selectedProductIndex = productIndex;
+    selectedProductIndex = productIndex;
   }
 
   void toggleDisplayMode() {
