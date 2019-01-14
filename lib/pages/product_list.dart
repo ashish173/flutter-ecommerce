@@ -27,7 +27,7 @@ class ProductListPage extends StatelessWidget {
         return ListView.builder(
           itemBuilder: (context, index) {
             return ListTile(
-              leading: Image.asset(model.allProducts[index].image),
+              leading: Image.network(model.allProducts[index].image),
               title: Text(model.allProducts[index].title),
               trailing: _buildEditButton(context, index, model),
             );

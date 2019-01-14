@@ -1,26 +1,46 @@
+import 'dart:convert';
+
 import 'package:scoped_model/scoped_model.dart';
+import 'package:http/http.dart' as http;
 
 import '../models/product.dart';
 import '../models/user.dart';
 
 mixin ConnectedProductsModel on Model {
-  final List<Product> _products = [];
+  List<Product> _products = [];
   int _selectedProductIndex;
   User _authenticatedUser;
 
   void addProduct(
       String title, String description, String image, double price) {
-    Product newProduct = Product(
-        title: title,
-        description: description,
-        image: image,
-        price: price,
-        userEmail: _authenticatedUser.email,
-        userId: _authenticatedUser.id);
-    _products.add(newProduct);
+    final Map<String, dynamic> productData = {
+      'title': title,
+      'description': description,
+      'image':
+          'https://cdn.newsapi.com.au/image/v1/551af2930c81cf6c4aaa1c5d9f1c075f',
+      'price': price,
+      'userEmail': _authenticatedUser.email,
+      'userId': _authenticatedUser.id
+    };
 
-    _selectedProductIndex = null;
-    notifyListeners();
+    http
+        .post('https://products-flutter-84512.firebaseio.com/products.json',
+            body: json.encode(productData))
+        .then((http.Response response) {
+      final Map<String, dynamic> responseData = json.decode(response.body);
+
+      Product newProduct = Product(
+          id: responseData['id'],
+          title: title,
+          description: description,
+          image: image,
+          price: price,
+          userEmail: _authenticatedUser.email,
+          userId: _authenticatedUser.id);
+
+      _products.add(newProduct);
+      notifyListeners();
+    });
   }
 
   int get selectedProductIndex {
@@ -52,6 +72,32 @@ mixin ProductsModel on ConnectedProductsModel {
   void deleteProduct() {
     _products.removeAt(_selectedProductIndex);
     notifyListeners();
+  }
+
+  void fetchProducts() {
+    http
+        .get('https://products-flutter-84512.firebaseio.com/products.json')
+        .then((http.Response response) {
+      // create a product list
+      final List<Product> fetchedProductList = [];
+      final Map<String, dynamic> productListData = json.decode(response.body);
+
+      productListData.forEach((String productId, dynamic productData) {
+        final Product product = Product(
+            id: productId,
+            title: productData['title'],
+            description: productData['description'],
+            price: productData['price'],
+            image: productData['image'],
+            userEmail: productData['userEmail'],
+            userId: productData['userId']);
+
+        fetchedProductList.add(product);
+      });
+
+      _products = fetchedProductList;
+      notifyListeners();
+    });
   }
 
   void updateProduct(

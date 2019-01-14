@@ -1,6 +1,7 @@
 // Product Model
 
 class Product {
+  final String id;
   final String title;
   final String description;
   final double price;
@@ -10,7 +11,8 @@ class Product {
   final String userId;
 
   Product(
-      {this.title,
+      {this.id,
+      this.title,
       this.description,
       this.price,
       this.image,
