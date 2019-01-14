@@ -4,7 +4,7 @@ import 'package:scoped_model/scoped_model.dart';
 
 import '../widgets/products/products.dart';
 import '../models/product.dart';
-import '../scoped-models/products.dart';
+import '../scoped-models/main.dart';
 
 class ProductsPage extends StatelessWidget {
   @override
@@ -38,7 +38,7 @@ class ProductsPage extends StatelessWidget {
         title: Text('Home Page'),
         actions: <Widget>[
           ScopedModelDescendant(
-            builder: (BuildContext context, Widget child, ProductsModel model) {
+            builder: (BuildContext context, Widget child, MainModel model) {
               return IconButton(
                 icon: Icon(model.showFavorite
                     ? Icons.favorite
