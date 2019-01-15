@@ -17,7 +17,7 @@ class _ProductEditPage extends State<ProductEditPage> {
     'title': null,
     'description': null,
     'price': null,
-    'image': 'assets/profile.jpeg'
+    'image': null
   };
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 

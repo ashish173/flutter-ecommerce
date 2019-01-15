@@ -12,18 +12,32 @@ class ProductsPage extends StatefulWidget {
   ProductsPage(this.model);
 
   @override
-    State<StatefulWidget> createState() {
-      return _ProductsPageState();
-    }
+  State<StatefulWidget> createState() {
+    return _ProductsPageState();
+  }
 }
 
 class _ProductsPageState extends State<ProductsPage> {
-
   @override
-    void initState() {
-      widget.model.fetchProducts();
-      super.initState();
-    }
+  void initState() {
+    widget.model.fetchProducts();
+    super.initState();
+  }
+
+  Widget _buildProductsList() {
+    Widget content;
+    return ScopedModelDescendant(
+      builder: (BuildContext context, Widget child, MainModel model) {
+        // if not loading and products then show products
+        if (model.displayProducts.length > 0 && !model.isLoading) {
+          content = Products();
+        } else if (model.isLoading) {
+          content = Center(child: CircularProgressIndicator());
+        }
+        return content;
+      },
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -69,11 +83,7 @@ class _ProductsPageState extends State<ProductsPage> {
           )
         ],
       ),
-      body: Column(children: <Widget>[
-        Expanded(
-          child: Products(),
-        ),
-      ]),
+      body: _buildProductsList(),
     );
   }
 }

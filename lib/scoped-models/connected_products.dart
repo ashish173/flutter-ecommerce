@@ -10,6 +10,7 @@ mixin ConnectedProductsModel on Model {
   List<Product> _products = [];
   int _selectedProductIndex;
   User _authenticatedUser;
+  bool _isLoading;
 
   void addProduct(
       String title, String description, String image, double price) {
@@ -75,6 +76,8 @@ mixin ProductsModel on ConnectedProductsModel {
   }
 
   void fetchProducts() {
+    _isLoading = true;
+    notifyListeners();
     http
         .get('https://products-flutter-84512.firebaseio.com/products.json')
         .then((http.Response response) {
@@ -95,6 +98,7 @@ mixin ProductsModel on ConnectedProductsModel {
         fetchedProductList.add(product);
       });
 
+      _isLoading = false;
       _products = fetchedProductList;
       notifyListeners();
     });
@@ -155,5 +159,11 @@ mixin ProductsModel on ConnectedProductsModel {
 mixin UserModel on ConnectedProductsModel {
   void login(String email, String password) {
     _authenticatedUser = User(email: email, id: 'asdfa', password: password);
+  }
+}
+
+mixin UtilityModel on ConnectedProductsModel {
+  bool get isLoading {
+    return _isLoading;
   }
 }
