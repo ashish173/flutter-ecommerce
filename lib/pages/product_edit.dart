@@ -54,7 +54,7 @@ class _ProductEditPage extends State<ProductEditPage> {
 
   Widget _buildPriceIntField(product) {
     return TextFormField(
-      decoration: InputDecoration(labelText: 'Price'),
+      decoration: InputDecoration(labelText: 'Pri'),
       initialValue: product == null ? '' : product.price.toString(),
       keyboardType: TextInputType.number,
       validator: (String value) {
@@ -81,7 +81,10 @@ class _ProductEditPage extends State<ProductEditPage> {
         _formData['description'],
         _formData['image'],
         _formData['price'],
-      );
+      ).then((_) {
+        Navigator.pushReplacementNamed(context, '/home')
+            .then((_) => selecteProduct(null));
+      });
     } else {
       updateProduct(
         _formData['title'],
@@ -90,19 +93,22 @@ class _ProductEditPage extends State<ProductEditPage> {
         _formData['price'],
       );
     }
-    Navigator.pushReplacementNamed(context, '/home')
-        .then((_) => selecteProduct(null));
   }
 
   Widget _buildSubmitButton() {
     return ScopedModelDescendant(
       builder: (BuildContext context, Widget child, MainModel model) {
-        return RaisedButton(
-          child: Text('Save'),
-          textColor: Colors.white,
-          onPressed: () => _submitForm(model.addProduct, model.updateProduct,
-              model.selectProduct, model.selectedProductIndex),
-        );
+        return model.isLoading
+            ? Center(child: CircularProgressIndicator())
+            : RaisedButton(
+                child: Text('Save'),
+                textColor: Colors.white,
+                onPressed: () => _submitForm(
+                    model.addProduct,
+                    model.updateProduct,
+                    model.selectProduct,
+                    model.selectedProductIndex),
+              );
       },
     );
   }
