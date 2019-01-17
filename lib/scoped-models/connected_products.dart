@@ -14,7 +14,7 @@ mixin ConnectedProductsModel on Model {
   bool _isLoading;
 
   Future<Null> addProduct(
-      String title, String description, String image, double price) { 
+      String title, String description, String image, double price) {
     _isLoading = true;
     notifyListeners();
 
@@ -116,18 +116,39 @@ mixin ProductsModel on ConnectedProductsModel {
     });
   }
 
-  void updateProduct(
+  Future<Null> updateProduct(
       String title, String description, String image, double price) {
-    Product updatedProduct = Product(
-        title: title,
-        description: description,
-        image: image,
-        price: price,
-        userEmail: _authenticatedUser.email,
-        userId: _authenticatedUser.id);
+    // send a request to firebase
+    Map<String, dynamic> updateData = {
+      'title': title,
+      'description': description,
+      'image':
+          'https://cdn.newsapi.com.au/image/v1/551af2930c81cf6c4aaa1c5d9f1c075f',
+      'price': price,
+      'userEmail': selectedProduct.userEmail,
+      'userId': selectedProduct.userId,
+    };
 
-    _products[_selectedProductIndex] = updatedProduct;
-    notifyListeners();
+    return http
+        .put(
+            'https://products-flutter-84512.firebaseio.com/products/${selectedProduct.id}.json',
+            body: json.encode(updateData))
+        .then((_) {
+      print('in update product method');
+      Product updatedProduct = Product(
+          id: selectedProduct.id,
+          title: title,
+          description: description,
+          image: image,
+          price: price,
+          userEmail: _authenticatedUser.email,
+          userId: _authenticatedUser.id);
+
+      _products[_selectedProductIndex] = updatedProduct;
+      _selectedProductIndex = null;
+      notifyListeners();
+      // make local change and notify
+    });
   }
 
   Product get selectedProduct {
