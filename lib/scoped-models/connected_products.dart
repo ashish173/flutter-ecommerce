@@ -80,10 +80,10 @@ mixin ProductsModel on ConnectedProductsModel {
     notifyListeners();
   }
 
-  void fetchProducts() {
+  Future<Null> fetchProducts() {
     _isLoading = true;
     notifyListeners();
-    http
+    return http
         .get('https://products-flutter-84512.firebaseio.com/products.json')
         .then((http.Response response) {
       // create a product list
@@ -119,6 +119,9 @@ mixin ProductsModel on ConnectedProductsModel {
   Future<Null> updateProduct(
       String title, String description, String image, double price) {
     // send a request to firebase
+    _isLoading = true;
+    notifyListeners();
+
     Map<String, dynamic> updateData = {
       'title': title,
       'description': description,
@@ -145,6 +148,7 @@ mixin ProductsModel on ConnectedProductsModel {
           userId: _authenticatedUser.id);
 
       _products[_selectedProductIndex] = updatedProduct;
+      _isLoading = false;
       _selectedProductIndex = null;
       notifyListeners();
       // make local change and notify
