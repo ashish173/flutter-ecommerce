@@ -9,7 +9,7 @@ import '../models/user.dart';
 
 mixin ConnectedProductsModel on Model {
   List<Product> _products = [];
-  int _selectedProductIndex;
+  String _selectedProductId;
   User _authenticatedUser;
   bool _isLoading;
 
@@ -49,8 +49,8 @@ mixin ConnectedProductsModel on Model {
     });
   }
 
-  int get selectedProductIndex {
-    return _selectedProductIndex;
+  String get selectedProductId {
+    return _selectedProductId;
   }
 }
 
@@ -60,6 +60,16 @@ mixin ProductsModel on ConnectedProductsModel {
 
   List<Product> get allProducts {
     return List.from(_products);
+  }
+
+  Product getProductById(String id) {
+    Product newProduct;
+    _products.toList().forEach((Product product) {
+      if (product.id == id) {
+        newProduct = product;
+      }
+    });
+    return newProduct;
   }
 
   List<Product> get displayProducts {
@@ -75,9 +85,16 @@ mixin ProductsModel on ConnectedProductsModel {
     return _showFavorites;
   }
 
-  void deleteProduct() {
-    _products.removeAt(_selectedProductIndex);
+  Future<Null> deleteProduct() {
+    _products.removeAt(selectedProductIndex);
+    
     notifyListeners();
+    return http
+        .delete(
+            'https://products-flutter-84512.firebaseio.com/products/${_selectedProductId}.json')
+        .then((http.Response response) {
+      _selectedProductId = null;
+    });
   }
 
   Future<Null> fetchProducts() {
@@ -93,7 +110,6 @@ mixin ProductsModel on ConnectedProductsModel {
       if (productListData == null) {
         _isLoading = false;
         notifyListeners();
-
         return;
       }
 
@@ -113,6 +129,7 @@ mixin ProductsModel on ConnectedProductsModel {
       _isLoading = false;
       _products = fetchedProductList;
       notifyListeners();
+      _selectedProductId = null; // reset the selections before
     });
   }
 
@@ -147,28 +164,35 @@ mixin ProductsModel on ConnectedProductsModel {
           userEmail: _authenticatedUser.email,
           userId: _authenticatedUser.id);
 
-      _products[_selectedProductIndex] = updatedProduct;
+      _products[selectedProductIndex] = updatedProduct;
       _isLoading = false;
-      _selectedProductIndex = null;
+      _selectedProductId = null;
       notifyListeners();
       // make local change and notify
     });
   }
 
+  int get selectedProductIndex {
+    return _products.indexWhere((Product product) {
+      return product.id == _selectedProductId;
+    });
+  }
+
   Product get selectedProduct {
-    if (_selectedProductIndex == null) {
+    if (_selectedProductId == null) {
       return null;
     } else {
-      return _products[_selectedProductIndex];
+      return _products
+          .firstWhere((Product product) => product.id == selectedProductId);
     }
   }
 
   void toggleIsFavoriteProduct() {
-    final bool isCurrentlyFavorite =
-        _products[_selectedProductIndex].isFavorite;
+    final bool isCurrentlyFavorite = selectedProduct.isFavorite;
     final bool newFavoriteStatus = !isCurrentlyFavorite;
 
     Product updatedProduct = Product(
+        id: selectedProduct.id,
         title: selectedProduct.title,
         description: selectedProduct.description,
         price: selectedProduct.price,
@@ -177,12 +201,12 @@ mixin ProductsModel on ConnectedProductsModel {
         userId: selectedProduct.userId,
         isFavorite: newFavoriteStatus);
 
-    _products[_selectedProductIndex] = updatedProduct;
+    _products[selectedProductIndex] = updatedProduct;
     notifyListeners();
   }
 
-  void selectProduct(int index) {
-    _selectedProductIndex = index;
+  void selectProduct(String productId) {
+    _selectedProductId = productId;
     notifyListeners();
   }
 

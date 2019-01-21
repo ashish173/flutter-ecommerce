@@ -71,31 +71,29 @@ class _ProductEditPage extends State<ProductEditPage> {
 
   void _submitForm(
       Function addProduct, Function updateProduct, Function selecteProduct,
-      [int selectedProductIndex]) {
+      [String selectedProductId]) {
     _formKey.currentState.validate();
     _formKey.currentState.save();
 
-    if (selectedProductIndex == null) {
+    if (selectedProductId == null) {
+      print('we are adding a new product');
       addProduct(
         _formData['title'],
         _formData['description'],
         _formData['image'],
         _formData['price'],
-      ).then((_) {
-        Navigator.pushReplacementNamed(context, '/home')
-            .then((_) => selecteProduct(null));
-      });
+      );
     } else {
       updateProduct(
         _formData['title'],
         _formData['description'],
         _formData['image'],
         _formData['price'],
-      ).then((_) {
-        Navigator.pushReplacementNamed(context, '/home')
-            .then((_) => selecteProduct(null));
-      });
+      );
     }
+    
+    Navigator.pushReplacementNamed(context, '/home')
+            .then((_) => selecteProduct(null));  
   }
 
   Widget _buildSubmitButton() {
@@ -110,7 +108,7 @@ class _ProductEditPage extends State<ProductEditPage> {
                     model.addProduct,
                     model.updateProduct,
                     model.selectProduct,
-                    model.selectedProductIndex),
+                    model.selectedProductId),
               );
       },
     );
@@ -156,7 +154,10 @@ class _ProductEditPage extends State<ProductEditPage> {
         final Widget pageContent =
             _buildPageContent(context, model.selectedProduct);
 
-        if (model.selectedProductIndex == null) {
+        print('selected product id');
+        print(model.selectedProductId);
+
+        if (model.selectedProductId == null) {
           return pageContent;
         } else {
           return Scaffold(

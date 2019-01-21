@@ -1,15 +1,12 @@
 import 'package:flutter/material.dart';
 
-import 'package:scoped_model/scoped_model.dart';
-
 import '../widgets/ui_elements/title_default.dart';
-import '../scoped-models/main.dart';
 import '../models/product.dart';
 
 class ProductPage extends StatelessWidget {
-  final int index;
+  final Product product;
 
-  ProductPage(this.index);
+  ProductPage(this.product);
 
   Widget _buildAddressRow(double price) {
     return Row(
@@ -31,31 +28,26 @@ class ProductPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
-      onWillPop: () {
-        print('back button pressed');
-        Navigator.pop(context);
-        Future.value(false);
-      },
-      child: ScopedModelDescendant<MainModel>(
-          builder: (BuildContext context, Widget child, MainModel model) {
-        final List<Product> products = model.allProducts;
-        final Product selectedProduct = products[index];
-
-        return Scaffold(
+        onWillPop: () {
+          print('back button pressed');
+          Navigator.pop(context);
+          Future.value(false);
+        },
+        child: Scaffold(
           appBar: AppBar(
-            title: Text(selectedProduct.title),
+            title: Text(product.title),
           ),
           body: Center(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: <Widget>[
-                Image.network(selectedProduct.image),
+                Image.network(product.image),
                 Container(
                   padding: EdgeInsets.all(10.0),
-                  child: TitleDefault(selectedProduct.title),
+                  child: TitleDefault(product.title),
                 ),
-                _buildAddressRow(selectedProduct.price),
-                Text(selectedProduct.userEmail),
+                _buildAddressRow(product.price),
+                Text(product.userEmail),
                 Container(
                   padding: EdgeInsets.all(10.0),
                   child: RaisedButton(
@@ -69,8 +61,6 @@ class ProductPage extends StatelessWidget {
               ],
             ),
           ),
-        );
-      }),
-    );
+        ));
   }
 }

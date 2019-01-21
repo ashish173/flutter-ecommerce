@@ -28,7 +28,7 @@ class _ProductListPageState extends State<ProductListPage> {
     return IconButton(
       icon: Icon(Icons.edit),
       onPressed: () {
-        model.selectProduct(index);
+        model.selectProduct(model.allProducts[index].id);
         Navigator.of(context).push(
           MaterialPageRoute(builder: (BuildContext context) {
             return ProductEditPage();
@@ -41,15 +41,26 @@ class _ProductListPageState extends State<ProductListPage> {
   Widget build(BuildContext context) {
     return ScopedModelDescendant<MainModel>(
       builder: (BuildContext context, child, MainModel model) {
-        return ListView.builder(
+        return 
+        ListView.builder(
+          itemCount: model.allProducts.length,
           itemBuilder: (context, index) {
-            return ListTile(
-              // leading: Image.network(model.allProducts[index].image),
-              title: Text(model.allProducts[index].title),
-              trailing: _buildEditButton(context, index, model),
+            return Dismissible(
+              key: Key(model.allProducts[index].id),
+              onDismissed: (direction) {
+                print('we have dismissed');
+                model.selectProduct(model.allProducts[index].id);
+                model.deleteProduct();
+              },
+              child: ListTile(
+                leading: CircleAvatar( 
+                  backgroundImage: NetworkImage(model.allProducts[index].image)
+                ),
+                title: Text(model.allProducts[index].title),
+                trailing: _buildEditButton(context, index, model),
+              )
             );
           },
-          itemCount: model.allProducts.length,
         );
       },
     );

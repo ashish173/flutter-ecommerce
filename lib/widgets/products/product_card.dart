@@ -1,17 +1,14 @@
 import 'package:flutter/material.dart';
 
-import 'package:scoped_model/scoped_model.dart';
-
 import '../ui_elements/title_default.dart';
 import '../ui_elements/address_tag.dart';
 import '../../models/product.dart';
-import '../../scoped-models/main.dart';
 
 class ProductCard extends StatelessWidget {
   final Product product;
-  final int productIndex;
+  final int productId;
 
-  ProductCard(this.product, this.productIndex);
+  ProductCard(this.product, this.productId);
 
   Widget _buildTitlePriceRow(BuildContext context) {
     return Container(
@@ -45,23 +42,23 @@ class ProductCard extends StatelessWidget {
           color: Theme.of(context).accentColor,
           onPressed: () {
             Navigator.pushNamed<bool>(
-                context, '/product/' + productIndex.toString());
+                context, '/product/' + product.id.toString());
           },
         ),
-        ScopedModelDescendant<MainModel>(
-          builder: (BuildContext context, Widget child, MainModel model) {
-            return IconButton(
-              icon: Icon(model.allProducts[productIndex].isFavorite
-                  ? Icons.favorite
-                  : Icons.favorite_border),
-              color: Theme.of(context).primaryColor,
-              onPressed: () {
-                model.selectProduct(productIndex);
-                model.toggleIsFavoriteProduct();
-              },
-            );
-          },
-        )
+        // ScopedModelDescendant<MainModel>(
+        //   builder: (BuildContext context, Widget child, MainModel model) {
+        //     return IconButton(
+        //       icon: Icon(model.allProducts[productIndex].isFavorite
+        //           ? Icons.favorite
+        //           : Icons.favorite_border),
+        //       color: Theme.of(context).primaryColor,
+        //       onPressed: () {
+        //         model.selectProduct(productIndex);
+        //         model.toggleIsFavoriteProduct();
+        //       },
+        //     );
+        //   },
+        // )
       ],
     );
   }
