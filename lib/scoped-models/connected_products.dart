@@ -13,42 +13,6 @@ mixin ConnectedProductsModel on Model {
   User _authenticatedUser;
   bool _isLoading;
 
-  Future<Null> addProduct(
-      String title, String description, String image, double price) {
-    _isLoading = true;
-    notifyListeners();
-
-    final Map<String, dynamic> productData = {
-      'title': title,
-      'description': description,
-      'image':
-          'https://cdn.newsapi.com.au/image/v1/551af2930c81cf6c4aaa1c5d9f1c075f',
-      'price': price,
-      'userEmail': _authenticatedUser.email,
-      'userId': _authenticatedUser.id
-    };
-
-    return http
-        .post('https://products-flutter-84512.firebaseio.com/products.json',
-            body: json.encode(productData))
-        .then((http.Response response) {
-      final Map<String, dynamic> responseData = json.decode(response.body);
-
-      Product newProduct = Product(
-          id: responseData['id'],
-          title: title,
-          description: description,
-          image: image,
-          price: price,
-          userEmail: _authenticatedUser.email,
-          userId: _authenticatedUser.id);
-
-      _products.add(newProduct);
-      _isLoading = false;
-      notifyListeners();
-    });
-  }
-
   String get selectedProductId {
     return _selectedProductId;
   }
@@ -85,24 +49,70 @@ mixin ProductsModel on ConnectedProductsModel {
     return _showFavorites;
   }
 
-  Future<Null> deleteProduct() {
-    _products.removeAt(selectedProductIndex);
-    
-    notifyListeners();
-    return http
-        .delete(
-            'https://products-flutter-84512.firebaseio.com/products/${_selectedProductId}.json')
-        .then((http.Response response) {
-      _selectedProductId = null;
-    });
-  }
-
-  Future<Null> fetchProducts() {
+  /* Create a product */
+  Future<bool> addProduct(
+      String title, String description, String image, double price) async {
     _isLoading = true;
     notifyListeners();
-    return http
-        .get('https://products-flutter-84512.firebaseio.com/products.json')
-        .then((http.Response response) {
+
+    final Map<String, dynamic> productData = {
+      'title': title,
+      'description': description,
+      'image':
+          'https://cdn.newsapi.com.au/image/v1/551af2930c81cf6c4aaa1c5d9f1c075f',
+      'price': price,
+      'userEmail': _authenticatedUser.email,
+      'userId': _authenticatedUser.id
+    };
+
+    http.Response response = await http
+        .post('https://products-flutter-84512.firebaseio.com/products.json',
+            body: json.encode(productData));
+    
+    if (response.statusCode != 200 && response.statusCode != 201) {
+      print('we have error ${response.statusCode}');
+      _isLoading = false;
+      notifyListeners();
+      return false;
+    }
+    print('we have error outside ${response.statusCode}');
+
+    final Map<String, dynamic> responseData = json.decode(response.body);
+    Product newProduct = Product(
+        id: responseData['id'],
+        title: title,
+        description: description,
+        image: image,
+        price: price,
+        userEmail: _authenticatedUser.email,
+        userId: _authenticatedUser.id);
+
+    _products.add(newProduct);
+    _isLoading = false;
+    notifyListeners();
+    return true;
+  }
+
+  /* Delete a product */
+  Future<bool> deleteProduct() async {
+    _products.removeAt(selectedProductIndex);
+
+    notifyListeners();
+    http.Response response = await http
+        .delete(
+            'https://products-flutter-84512.firebaseio.com/products/${_selectedProductId}.json');
+  
+    _selectedProductId = null;
+    return true;
+  }
+
+  /* Fetch products from firebase */
+  Future<bool> fetchProducts() async {
+    _isLoading = true;
+    notifyListeners();
+    http.Response response = await http
+        .get('https://products-flutter-84512.firebaseio.com/products.json');
+        
       // create a product list
       final List<Product> fetchedProductList = [];
       final Map<String, dynamic> productListData = json.decode(response.body);
@@ -110,7 +120,7 @@ mixin ProductsModel on ConnectedProductsModel {
       if (productListData == null) {
         _isLoading = false;
         notifyListeners();
-        return;
+        return false;
       }
 
       productListData.forEach((String productId, dynamic productData) {
@@ -129,12 +139,12 @@ mixin ProductsModel on ConnectedProductsModel {
       _isLoading = false;
       _products = fetchedProductList;
       notifyListeners();
-      _selectedProductId = null; // reset the selections before
-    });
+      _selectedProductId = null; // reset the selections
+      return true;
   }
 
-  Future<Null> updateProduct(
-      String title, String description, String image, double price) {
+  Future<bool> updateProduct(
+      String title, String description, String image, double price) async {
     // send a request to firebase
     _isLoading = true;
     notifyListeners();
@@ -149,27 +159,31 @@ mixin ProductsModel on ConnectedProductsModel {
       'userId': selectedProduct.userId,
     };
 
-    return http
+    http.Response response = await http
         .put(
             'https://products-flutter-84512.firebaseio.com/products/${selectedProduct.id}.json',
-            body: json.encode(updateData))
-        .then((_) {
-      print('in update product method');
-      Product updatedProduct = Product(
-          id: selectedProduct.id,
-          title: title,
-          description: description,
-          image: image,
-          price: price,
-          userEmail: _authenticatedUser.email,
-          userId: _authenticatedUser.id);
-
-      _products[selectedProductIndex] = updatedProduct;
+            body: json.encode(updateData));
+    if (response.statusCode != 200 && response.statusCode != 201) {
       _isLoading = false;
-      _selectedProductId = null;
       notifyListeners();
-      // make local change and notify
-    });
+      return false;
+    }
+        
+    print('in update product method');
+    Product updatedProduct = Product(
+        id: selectedProduct.id,
+        title: title,
+        description: description,
+        image: image,
+        price: price,
+        userEmail: _authenticatedUser.email,
+        userId: _authenticatedUser.id);
+
+    _products[selectedProductIndex] = updatedProduct;
+    _isLoading = false;
+    _selectedProductId = null;
+    notifyListeners();
+    return true;
   }
 
   int get selectedProductIndex {

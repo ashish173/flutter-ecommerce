@@ -82,18 +82,55 @@ class _ProductEditPage extends State<ProductEditPage> {
         _formData['description'],
         _formData['image'],
         _formData['price'],
-      );
+      ).then((bool response) {
+        if (response) {
+          Navigator.pushReplacementNamed(context, '/home')
+              .then((_) => selecteProduct(null));
+        } else {
+          showDialog(
+              context: context,
+              builder: (BuildContext context) {
+                return AlertDialog(
+                  title: Text('Error'),
+                  content: Text('Please try again'),
+                  actions: <Widget>[
+                    FlatButton(
+                      onPressed: () => Navigator.of(context).pop(),
+                      child: Text('Okay'),
+                    )
+                  ],
+                );
+              });
+        }
+      });
     } else {
       updateProduct(
         _formData['title'],
         _formData['description'],
         _formData['image'],
         _formData['price'],
-      );
+      ).then((bool response) {
+        if (response) {
+          Navigator.pushReplacementNamed(context, '/home')
+              .then((_) => selecteProduct(null));
+        } else {
+          showDialog(
+              context: context,
+              builder: (BuildContext context) {
+                return AlertDialog(
+                  title: Text('Error'),
+                  content: Text('Please try again'),
+                  actions: <Widget>[
+                    FlatButton(
+                      onPressed: () => Navigator.of(context).pop(),
+                      child: Text('Okay'),
+                    )
+                  ],
+                );
+              });
+        }
+      });
     }
-    
-    Navigator.pushReplacementNamed(context, '/home')
-            .then((_) => selecteProduct(null));  
   }
 
   Widget _buildSubmitButton() {

@@ -47,10 +47,17 @@ class _ProductListPageState extends State<ProductListPage> {
           itemBuilder: (context, index) {
             return Dismissible(
               key: Key(model.allProducts[index].id),
-              onDismissed: (direction) {
+              background: Container(color: Colors.red),
+              onDismissed: (DismissDirection direction) {
                 print('we have dismissed');
-                model.selectProduct(model.allProducts[index].id);
-                model.deleteProduct();
+                if (direction == DismissDirection.endToStart) {
+                  model.selectProduct(model.allProducts[index].id);
+                  model.deleteProduct();
+                } else if (direction == DismissDirection.startToEnd) {
+                  print('dismiss from end to start');
+                } else {
+                  print('other dismiss');
+                }
               },
               child: ListTile(
                 leading: CircleAvatar( 
